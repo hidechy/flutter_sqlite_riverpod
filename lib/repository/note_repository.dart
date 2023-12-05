@@ -28,7 +28,11 @@ class NoteRepository {
   ///
   static Future<void> insert({required Note note}) async {
     final db = await _database();
-    await db.insert(_tableName, note.toMap(), conflictAlgorithm: ConflictAlgorithm.replace);
+    await db.insert(
+      _tableName,
+      note.toMap(),
+      conflictAlgorithm: ConflictAlgorithm.replace,
+    );
   }
 
   ///
