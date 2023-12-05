@@ -19,9 +19,7 @@ class NoteNotifier extends StateNotifier<NoteResponseState> {
 
   ///
   Future<void> updateNoteList({required Note note}) async {
-    var noteList = <Note>[];
-
-    noteList = state.noteList.value!;
+    var noteList = state.noteList.value!;
 
     final index = noteList.indexWhere((nt) => nt.id == note.id);
 
