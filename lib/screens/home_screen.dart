@@ -126,14 +126,12 @@ class HomeScreen extends ConsumerWidget {
                   child: Row(
                     children: [
                       GestureDetector(
-                        onTap: () {
-                          showUnderMenu(note: element);
-                        },
+                        onTap: () => showUnderMenu(note: element),
                         child: const Icon(Icons.edit),
                       ),
                       const SizedBox(width: 20),
                       GestureDetector(
-                        onTap: () {},
+                        onTap: () => NoteRepository.delete(note: element, ref: _ref),
                         child: const Icon(Icons.delete),
                       ),
                     ],

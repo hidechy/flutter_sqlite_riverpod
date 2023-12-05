@@ -29,6 +29,17 @@ class NoteNotifier extends StateNotifier<NoteResponseState> {
 
     state = state.copyWith(noteList: AsyncValue.data(noteList));
   }
+
+  ///
+  Future<void> deleteNoteList({required Note note}) async {
+    var noteList = state.noteList.value!;
+
+    final index = noteList.indexWhere((nt) => nt.id == note.id);
+
+    noteList.removeAt(index);
+
+    state = state.copyWith(noteList: AsyncValue.data(noteList));
+  }
 }
 
 ////////////////////////////////////////////////

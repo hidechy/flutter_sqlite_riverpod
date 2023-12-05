@@ -1,9 +1,9 @@
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:path/path.dart';
 import 'package:sqflite/sqflite.dart';
-import 'package:test_sqlite/state/note_notifier.dart';
 
 import '../models/note.dart';
+import '../state/note_notifier.dart';
 
 // ignore: avoid_classes_with_only_static_members
 class NoteRepository {
@@ -56,13 +56,15 @@ class NoteRepository {
   static Future<void> update({required Note note, required WidgetRef ref}) async {
     final db = await _database();
 
-    await db.update(
-      _tableName,
-      note.toMap(),
-      where: 'id = ?',
-      whereArgs: [note.id],
-    );
+    await db.update(_tableName, note.toMap(), where: 'id = ?', whereArgs: [note.id]);
 
     await ref.read(noteProvider.notifier).updateNoteList(note: note);
+  }
+
+  ///
+  static Future<void> delete({required Note note, required WidgetRef ref}) async {
+    final db = await _database();
+
+    await db.delete(_tableName, where: 'id = ?', whereArgs: [note.id]);
   }
 }
