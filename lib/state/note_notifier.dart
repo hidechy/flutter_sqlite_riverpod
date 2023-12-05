@@ -14,9 +14,8 @@ class NoteNotifier extends StateNotifier<NoteResponseState> {
   NoteNotifier(super.state);
 
   ///
-  Future<void> setNoteList({required List<Note> noteList}) async {
-    state = state.copyWith(noteList: AsyncValue.data(noteList));
-  }
+  Future<void> setNoteList({required List<Note> noteList}) async =>
+      state = state.copyWith(noteList: AsyncValue.data(noteList));
 
   ///
   Future<void> updateNoteList({required Note note}) async {
