@@ -40,7 +40,11 @@ class HomeScreen extends ConsumerWidget {
   }
 
   ///
-  Future<dynamic> showUnderMenu() async {
+  Future<dynamic> showUnderMenu({Note? note}) async {
+    if (note != null) {
+      noteController.text = note.note;
+    }
+
     return showModalBottomSheet(
       context: _context,
       barrierColor: Colors.transparent,
@@ -67,7 +71,8 @@ class HomeScreen extends ConsumerWidget {
                     ),
                     IconButton(
                       onPressed: () async {
-                        await _insertNote();
+                        (note != null) ? await _updateNote(note: note) : await _insertNote();
+
                         await NoteRepository.getNotes(ref: _ref);
 
                         if (context.mounted) {
@@ -94,6 +99,16 @@ class HomeScreen extends ConsumerWidget {
   }
 
   ///
+  Future<void> _updateNote({required Note note}) async {
+    await NoteRepository.update(
+      note: Note(id: note.id, note: noteController.text, createdAt: note.createdAt),
+      ref: _ref,
+    );
+
+    noteController.clear();
+  }
+
+  ///
   Widget _displayNoteList() {
     final noteList = _ref.watch(noteProvider.select((value) => value.noteList));
 
@@ -102,7 +117,31 @@ class HomeScreen extends ConsumerWidget {
         final list = <Widget>[];
 
         value.forEach((element) {
-          list.add(Text(element.note));
+          list.add(
+            Card(
+              child: ListTile(
+                title: Text('${element.id}: ${element.note}'),
+                trailing: SizedBox(
+                  width: 70,
+                  child: Row(
+                    children: [
+                      GestureDetector(
+                        onTap: () {
+                          showUnderMenu(note: element);
+                        },
+                        child: const Icon(Icons.edit),
+                      ),
+                      const SizedBox(width: 20),
+                      GestureDetector(
+                        onTap: () {},
+                        child: const Icon(Icons.delete),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ),
+          );
         });
 
         return SingleChildScrollView(

@@ -32,20 +32,6 @@ class NoteRepository {
   }
 
   ///
-  // static Future<List<Note>> getNotes() async {
-  //   final db = await _database();
-  //
-  //   final List<Map<String, dynamic>> maps = await db.query(_tableName);
-  //
-  //   return List.generate(maps.length, (index) {
-  //     return Note(
-  //       id: maps[index]['id'] as int,
-  //       note: maps[index]['note'] as String,
-  //       createdAt: DateTime.parse(maps[index]['createdAt']),
-  //     );
-  //   });
-  // }
-
   static Future<void> getNotes({required WidgetRef ref}) async {
     final db = await _database();
 
@@ -60,5 +46,19 @@ class NoteRepository {
     });
 
     await ref.read(noteProvider.notifier).setNoteList(noteList: noteList);
+  }
+
+  ///
+  static Future<void> update({required Note note, required WidgetRef ref}) async {
+    final db = await _database();
+
+    await db.update(
+      _tableName,
+      note.toMap(),
+      where: 'id = ?',
+      whereArgs: [note.id],
+    );
+
+    await ref.read(noteProvider.notifier).updateNoteList(note: note);
   }
 }
